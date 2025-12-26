@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수익인증 - GA100</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .revenue-hero {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .revenue-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+        
+        .revenue-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .revenue-actions {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .revenue-form {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .revenue-form h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .revenue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .revenue-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .revenue-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .revenue-header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 25px;
+        }
+        
+        .revenue-amount {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        
+        .revenue-date {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .revenue-body {
+            padding: 25px;
+        }
+        
+        .revenue-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .author-info {
+            flex: 1;
+        }
+        
+        .author-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .revenue-feeling {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .revenue-feeling-label {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .revenue-feeling-text {
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .revenue-extras {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .revenue-extra-item {
+            padding: 12px;
+            background: #fef3c7;
+            border-radius: 8px;
+            border-left: 3px solid #f59e0b;
+        }
+        
+        .revenue-extra-label {
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .revenue-extra-text {
+            color: #78350f;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .revenue-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">GA<span>100</span></a>
+                </div>
+                <nav class="nav">
+                    <a href="courses.html">전자책</a>
+                    <a href="revenue.html">수익인증</a>
+                    <a href="community.html">커뮤니티</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="notification-btn" id="notificationBtn">🔔</button>
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>GA100</h3>
+            <button class="close-sidebar" id="closeSidebar">✕</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <button class="auth-btn" id="authBtn">로그인</button>
+            </div>
+            <div class="sidebar-section">
+                <h4>강의</h4>
+                <a href="courses.html?type=allinone">올인원 전자책</a>
+                <a href="courses.html?type=extend">수강 기간 연장</a>
+                <a href="courses.html">모든 강의 보기</a>
+            </div>
+            <div class="sidebar-section">
+                <h4>커뮤니티</h4>
+                <a href="community.html?tab=notice">공지</a>
+                <a href="community.html?tab=secret">시크릿 1:1 질문</a>
+                <a href="community.html?tab=community">제자 커뮤니티</a>
+            </div>
+        </div>
+    </aside>
+
+    <div class="revenue-hero">
+        <div class="container">
+            <h1>💰 수익 인증</h1>
+            <p>함께 성장하는 수익 공유 커뮤니티</p>
+        </div>
+    </div>
+
+    <main class="revenue-container">
+        <div class="revenue-actions">
+            <button class="btn btn-primary" onclick="toggleRevenueForm()">내 수익 인증하기</button>
+        </div>
+
+        <div class="revenue-form" id="revenueForm" style="display: none;">
+            <h3>수익 인증 작성</h3>
+            <form onsubmit="handleRevenueSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>수익 금액 (원) *</label>
+                        <input type="number" class="form-control" id="revenueAmount" required placeholder="예: 150000">
+                    </div>
+                    <div class="form-group">
+                        <label>인증 날짜 *</label>
+                        <input type="date" class="form-control" id="revenueDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>소감 * (필수)</label>
+                    <textarea class="form-control" id="revenueFeeling" required placeholder="수익에 대한 소감을 작성해주세요..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>노하우/팁 (선택)</label>
+                    <textarea class="form-control" id="revenueTips" placeholder="다른 분들과 공유하고 싶은 노하우나 팁이 있다면 작성해주세요..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>수익 창출 주제 (선택)</label>
+                    <input type="text" class="form-control" id="revenueSubject" placeholder="예: 블로그, 유튜브, 웹사이트 등">
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">인증 등록</button>
+                    <button type="button" class="btn btn-outline" onclick="toggleRevenueForm()">취소</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="revenueList" class="revenue-grid"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="my-home.html">마이홈</a>
+                <a href="revenue.html">수익인증</a>
+                <a href="courses.html">전자책</a>
+                <a href="community.html">커뮤니티</a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2024 GA100. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initAuth();
+            loadRevenues();
+            
+            // 오늘 날짜 설정
+            document.getElementById('revenueDate').valueAsDate = new Date();
+        });
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.add('active');
+        });
+
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('active');
+        });
+
+        function toggleRevenueForm() {
+            const form = document.getElementById('revenueForm');
+            const user = getCurrentUser();
+            
+            if (!user) {
+                alert('로그인이 필요합니다.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function handleRevenueSubmit(event) {
+            event.preventDefault();
+            
+            const user = getCurrentUser();
+            const amount = document.getElementById('revenueAmount').value;
+            const date = document.getElementById('revenueDate').value;
+            const feeling = document.getElementById('revenueFeeling').value;
+            const tips = document.getElementById('revenueTips').value;
+            const subject = document.getElementById('revenueSubject').value;
+            
+            addRevenue({
+                userId: user.id,
+                amount: parseInt(amount),
+                date,
+                feeling,
+                tips,
+                subject
+            });
+            
+            alert('수익 인증이 등록되었습니다!');
+            
+            // 폼 초기화
+            event.target.reset();
+            document.getElementById('revenueDate').valueAsDate = new Date();
+            toggleRevenueForm();
+            loadRevenues();
+        }
+
+        function loadRevenues() {
+            const revenues = getRevenues().sort((a, b) => b.created - a.created);
+            const container = document.getElementById('revenueList');
+            
+            if (revenues.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-light);">
+                        <div style="font-size: 64px; margin-bottom: 20px; opacity: 0.3;">💰</div>
+                        <h3>아직 등록된 수익 인증이 없습니다</h3>
+                        <p>첫 번째 수익 인증의 주인공이 되어보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = revenues.map(revenue => {
+                const user = getUsers().find(u => u.id === revenue.userId);
+                const userName = user ? user.nickname : '익명';
+                
+                return `
+                    <div class="revenue-card">
+                        <div class="revenue-header">
+                            <div class="revenue-amount">${revenue.amount.toLocaleString()}원</div>
+                            <div class="revenue-date">${formatDate(revenue.date)}</div>
+                        </div>
+                        <div class="revenue-body">
+                            <div class="revenue-author">
+                                <div class="author-avatar">${userName.charAt(0).toUpperCase()}</div>
+                                <div class="author-info">
+                                    <div class="author-name">${userName}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="revenue-feeling">
+                                <div class="revenue-feeling-label">소감</div>
+                                <div class="revenue-feeling-text">${revenue.feeling}</div>
+                            </div>
+                            
+                            ${revenue.tips || revenue.subject ? `
+                                <div class="revenue-extras">
+                                    ${revenue.tips ? `
+                                        <div class="revenue-extra-item">
+                                            <div class="revenue-extra-label">💡 노하우/팁</div>
+                                            <div class="revenue-extra-text">${revenue.tips}</div>
+                                        </div>
+                                    ` : ''}
+                                    ${revenue.subject ? `
+                                        <div class="revenue-extra-item">
+                                            <div class="revenue-extra-label">📌 수익 주제</div>
+                                            <div class="revenue-extra-text">${revenue.subject}</div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+    </script>
+</body>
+  </html>

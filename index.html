@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA100 - 애드센스 수익화 전문 플랫폼</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">GA<span>100</span></a>
+                </div>
+                <nav class="nav">
+                    <a href="#courses">전자책</a>
+                    <a href="revenue.html">수익인증</a>
+                    <a href="community.html">커뮤니티</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="notification-btn" id="notificationBtn">
+                        🔔
+                        <span class="notification-dot" id="notificationDot"></span>
+                    </button>
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 사이드바 -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>GA100</h3>
+            <button class="close-sidebar" id="closeSidebar">✕</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <button class="auth-btn" id="authBtn">로그인</button>
+            </div>
+            <div class="sidebar-section">
+                <h4>강의</h4>
+                <a href="courses.html?type=allinone">올인원 전자책</a>
+                <a href="courses.html?type=extend">수강 기간 연장</a>
+                <a href="courses.html">모든 강의 보기</a>
+            </div>
+            <div class="sidebar-section">
+                <h4>커뮤니티</h4>
+                <a href="community.html?tab=notice">공지</a>
+                <a href="community.html?tab=secret">시크릿 1:1 질문</a>
+                <a href="community.html?tab=community">제자 커뮤니티</a>
+            </div>
+            <div class="sidebar-section">
+                <h4>프로그램</h4>
+                <a href="#ai-writing">AI 글쓰기</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 알림 드롭다운 -->
+    <div class="notification-dropdown" id="notificationDropdown">
+        <div class="notification-header">
+            <h3>알림</h3>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <div class="notification-item">알림이 없습니다.</div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <!-- 히어로 섹션 -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>애드센스로 <span>수익 창출</span>하세요</h1>
+                    <p>체계적인 커리큘럼과 실전 노하우로 당신의 애드센스 수익을 극대화합니다</p>
+                    <div class="hero-actions">
+                        <a href="courses.html" class="btn btn-primary">강의 둘러보기</a>
+                        <a href="revenue.html" class="btn btn-outline">수익인증 보기</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 인기 강의 -->
+        <section class="featured-courses" id="courses">
+            <div class="container">
+                <h2>인기 전자책</h2>
+                <div class="course-grid" id="featuredCourses">
+                    <!-- 동적으로 로드 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 수익 통계 -->
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalStudents">0</div>
+                        <div class="stat-label">수강생</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalRevenue">0</div>
+                        <div class="stat-label">수익 인증</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalCourses">0</div>
+                        <div class="stat-label">전자책</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="my-home.html">마이홈</a>
+                <a href="revenue.html">수익인증</a>
+                <a href="courses.html">전자책</a>
+                <a href="community.html">커뮤니티</a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2024 GA100. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/security.js"></script>
+    <script>
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initAuth();
+            loadFeaturedCourses();
+            loadStats();
+            checkNotifications();
+            initSecurity();
+        });
+
+        // 사이드바 토글
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.add('active');
+        });
+
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('active');
+        });
+
+        // 알림 토글
+        document.getElementById('notificationBtn').addEventListener('click', function() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('active');
+        });
+
+        // 인기 강의 로드
+        function loadFeaturedCourses() {
+            const courses = getCourses().slice(0, 3);
+            const container = document.getElementById('featuredCourses');
+            
+            container.innerHTML = courses.map(course => `
+                <div class="course-card">
+                    <div class="course-image">
+                        <span class="course-badge">${course.category}</span>
+                    </div>
+                    <div class="course-content">
+                        <h3>${course.title}</h3>
+                        <p>${course.description}</p>
+                        <div class="course-footer">
+                            <span class="course-price">${course.price === 0 ? '무료' : course.price.toLocaleString() + '원'}</span>
+                            <a href="course-detail.html?id=${course.id}" class="btn btn-small">자세히 보기</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 통계 로드
+        function loadStats() {
+            const users = getUsers();
+            const revenues = getRevenues();
+            const courses = getCourses();
+            
+            document.getElementById('totalStudents').textContent = users.length;
+            document.getElementById('totalRevenue').textContent = revenues.length;
+            document.getElementById('totalCourses').textContent = courses.length;
+        }
+
+        // 알림 체크
+        function checkNotifications() {
+            const notifications = getNotifications();
+            const unread = notifications.filter(n => !n.read).length;
+            
+            if (unread > 0) {
+                document.getElementById('notificationDot').style.display = 'block';
+            }
+            
+            const list = document.getElementById('notificationList');
+            if (notifications.length === 0) {
+                list.innerHTML = '<div class="notification-item">알림이 없습니다.</div>';
+            } else {
+                list.innerHTML = notifications.slice(0, 5).map(n => `
+                    <div class="notification-item ${n.read ? '' : 'unread'}" onclick="openNotification('${n.id}')">
+                        <div class="notification-title">${n.title}</div>
+                        <div class="notification-time">${formatTime(n.time)}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openNotification(id) {
+            markNotificationRead(id);
+            const notification = getNotifications().find(n => n.id === id);
+            if (notification) {
+                window.location.href = notification.link;
+            }
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (minutes < 1) return '방금 전';
+            if (minutes < 60) return `${minutes}분 전`;
+            if (hours < 24) return `${hours}시간 전`;
+            return `${days}일 전`;
+        }
+    </script>
+</body>
+</html>

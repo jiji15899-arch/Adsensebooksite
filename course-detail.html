@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 상세 - GA100</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .course-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .course-header-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .course-header-thumb {
+            width: 300px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+        
+        .course-header-info h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .course-header-info p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .course-badges {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .course-badge-large {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .course-container {
+            max-width: 1200px;
+            margin: -50px auto 0;
+            padding: 0 20px 60px;
+            position: relative;
+        }
+        
+        .course-main {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+        
+        .course-content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .course-sidebar {
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+        }
+        
+        .price-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .price-amount {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .price-info {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .enroll-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .enroll-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .enroll-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .point-usage-box {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .point-usage-box h4 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .course-includes {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .course-includes h3 {
+            margin-bottom: 20px;
+        }
+        
+        .include-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .include-item:last-child {
+            border-bottom: none;
+        }
+        
+        .include-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .tab-panel {
+            display: none;
+        }
+        
+        .tab-panel.active {
+            display: block;
+        }
+        
+        .course-text {
+            line-height: 1.8;
+            color: var(--text);
+        }
+        
+        .review-form {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .review-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .review-author {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .review-date {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        @media (max-width: 768px) {
+            .course-main {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-sidebar {
+                position: static;
+            }
+            
+            .course-header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">GA<span>100</span></a>
+                </div>
+                <nav class="nav">
+                    <a href="courses.html">전자책</a>
+                    <a href="revenue.html">수익인증</a>
+                    <a href="community.html">커뮤니티</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="course-header">
+        <div class="container">
+            <div class="course-header-content">
+                <div class="course-header-thumb">📖</div>
+                <div class="course-header-info">
+                    <h1 id="courseTitle"></h1>
+                    <p id="courseDescription"></p>
+                    <div class="course-badges">
+                        <span class="course-badge-large" id="courseCategory"></span>
+                        <span class="course-badge-large" id="courseDuration"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="course-container">
+        <div class="course-main">
+            <div>
+                <div class="course-content-box">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('content')">강의 내용</button>
+                        <button class="tab" onclick="switchTab('reviews')">수강 후기</button>
+                    </div>
+                    
+                    <div class="tab-panel active" id="tab-content">
+                        <div class="course-text" id="courseContent"></div>
+                    </div>
+                    
+                    <div class="tab-panel" id="tab-reviews">
+                        <div class="review-form" id="reviewForm" style="display: none;">
+                            <h3>수강 후기 작성</h3>
+                            <p style="color: var(--text-light); margin: 10px 0;">후기 작성 시 시크릿 질문권 1회가 지급됩니다.</p>
+                            <form onsubmit="handleReviewSubmit(event)">
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="수강 후기를 작성해주세요..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">후기 등록</button>
+                            </form>
+                        </div>
+                        <div id="reviewsList"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="course-sidebar">
+                <div class="price-box">
+                    <div class="price-amount" id="coursePrice"></div>
+                    <div class="price-info">수강 기간: <strong id="coursePeriod"></strong></div>
+                    <button class="enroll-btn" id="enrollBtn" onclick="handleEnroll()">수강 신청</button>
+                    
+                    <div class="point-usage-box" id="pointBox" style="display: none;">
+                        <h4>포인트 사용</h4>
+                        <p style="font-size: 14px; color: var(--text-light); margin-bottom: 10px;">
+                            보유 포인트: <strong id="userPoints">0</strong>P
+                        </p>
+                        <p style="font-size: 13px; color: var(--text-light);">
+                            강의료의 40% 이상 보유 시 5일간 수강 가능
+                        </p>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 10px;" onclick="usePoints()">포인트로 수강</button>
+                    </div>
+                </div>
+                
+                <div class="course-includes">
+                    <h3>포함 내용</h3>
+                    <div class="include-item">
+                        <div class="include-icon">📚</div>
+                        <div>
+                            <strong>체계적인 커리큘럼</strong>
+                            <p style="font-size: 13px; color: var(--text-light); margin: 0;">단계별 학습 가이드</p>
+                        </div>
+                    </div>
+                    <div class="include-item">
+                        <div class="include-icon">💬</div>
+                        <div>
+                            <strong>1:1 질문 지원</strong>
+                            <p style="font-size: 13px; color: var(--text-light); margin: 0;">질문권으로 궁금증 해결</p>
+                        </div>
+                    </div>
+                    <div class="include-item">
+                        <div class="include-icon">🎯</div>
+                        <div>
+                            <strong>실전 노하우</strong>
+                            <p style="font-size: 13px; color: var(--text-light); margin: 0;">검증된 수익화 전략</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="my-home.html">마이홈</a>
+                <a href="revenue.html">수익인증</a>
+                <a href="courses.html">전자책</a>
+                <a href="community.html">커뮤니티</a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2024 GA100. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/security.js"></script>
+    <script>
+        let currentCourse = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('id');
+            
+            if (!courseId) {
+                window.location.href = 'courses.html';
+                return;
+            }
+            
+            initSecurity();
+            loadCourseDetail(courseId);
+            loadReviews(courseId);
+        });
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            alert('사이드바는 메인 페이지에서 사용할 수 있습니다.');
+        });
+
+        function loadCourseDetail(courseId) {
+            const course = getCourseById(courseId);
+            if (!course) {
+                alert('강의를 찾을 수 없습니다.');
+                window.location.href = 'courses.html';
+                return;
+            }
+            
+            currentCourse = course;
+            const user = getCurrentUser();
+            
+            document.getElementById('courseTitle').textContent = course.title;
+            document.getElementById('courseDescription').textContent = course.description;
+            document.getElementById('courseCategory').textContent = course.category;
+            document.getElementById('courseDuration').textContent = course.duration + '일 수강';
+            document.getElementById('coursePeriod').textContent = course.duration + '일';
+            
+            if (course.isFree) {
+                document.getElementById('coursePrice').textContent = '무료';
+                document.getElementById('coursePrice').style.color = 'var(--success)';
+            } else {
+                document.getElementById('coursePrice').textContent = course.price.toLocaleString() + '원';
+            }
+            
+            // 수강 권한 체크
+            if (user && checkEnrollment(user.id, courseId)) {
+                document.getElementById('courseContent').innerHTML = `<div class="course-text">${course.content}</div>`;
+                document.getElementById('enrollBtn').textContent = '수강 중';
+                document.getElementById('enrollBtn').disabled = true;
+                document.getElementById('reviewForm').style.display = 'block';
+            } else {
+                document.getElementById('courseContent').innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; background: var(--light); border-radius: 12px;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">🔒</div>
+                        <h3>수강 신청 후 이용 가능합니다</h3>
+                        <p style="color: var(--text-light); margin-top: 10px;">강의를 구매하시면 전체 내용을 확인하실 수 있습니다.</p>
+                    </div>
+                `;
+            }
+            
+            // 포인트 사용 옵션 표시
+            if (user && !course.isFree) {
+                const requiredPoints = Math.ceil(course.price * 0.4);
+                document.getElementById('userPoints').textContent = user.points.toLocaleString();
+                
+                if (user.points >= requiredPoints) {
+                    document.getElementById('pointBox').style.display = 'block';
+                }
+            }
+        }
+
+        function handleEnroll() {
+            const user = getCurrentUser();
+            
+            if (!user) {
+                alert('로그인이 필요합니다.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (currentCourse.isFree) {
+                enrollCourse(false);
+            } else {
+                if (confirm(`${currentCourse.price.toLocaleString()}원을 결제하시겠습니까?\n\n결제 후 관리자 승인이 필요합니다.`)) {
+                    alert('실제 결제는 관리자에게 문의해주세요.\n입금 확인 후 수강이 승인됩니다.');
+                    enrollCourse(false);
+                }
+            }
+        }
+
+        function usePoints() {
+            const user = getCurrentUser();
+            const requiredPoints = Math.ceil(currentCourse.price * 0.4);
+            
+            if (user.points < requiredPoints) {
+                alert(`포인트가 부족합니다.\n필요 포인트: ${requiredPoints.toLocaleString()}P`);
+                return;
+            }
+            
+            if (confirm(`${requiredPoints.toLocaleString()}P를 사용하여 5일간 수강하시겠습니까?`)) {
+                updateUser(user.id, { points: user.points - requiredPoints });
+                enrollCourse(true, 5);
+                alert('포인트 수강이 완료되었습니다!');
+                location.reload();
+            }
+        }
+
+        function enrollCourse(isPointUsage = false, days = null) {
+            const user = getCurrentUser();
+            const duration = days || currentCourse.duration;
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + duration);
+            
+            addEnrollment({
+                userId: user.id,
+                courseId: currentCourse.id,
+                expiryDate: expiryDate.getTime(),
+                status: currentCourse.isFree || isPointUsage ? 'active' : 'pending',
+                paymentMethod: isPointUsage ? 'points' : 'payment'
+            });
+            
+            if (currentCourse.isFree || isPointUsage) {
+                alert('수강 신청이 완료되었습니다!');
+                location.reload();
+            } else {
+                alert('수강 신청이 접수되었습니다.\n관리자 승인 후 수강이 가능합니다.');
+                window.location.href = 'my-home.html';
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        function loadReviews(courseId) {
+            const reviews = getCommunityPosts('review').filter(r => r.courseId === courseId);
+            const container = document.getElementById('reviewsList');
+            
+            if (reviews.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <p>아직 작성된 후기가 없습니다.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-author">${getUsers().find(u => u.id === review.userId)?.nickname || '익명'}</span>
+                        <span class="review-date">${formatDate(review.created)}</span>
+                    </div>
+                    <div>${review.content}</div>
+                </div>
+            `).join('');
+        }
+
+        function handleReviewSubmit(event) {
+            event.preventDefault();
+            
+            const user = getCurrentUser();
+            const content = event.target.querySelector('textarea').value;
+            
+            addCommunityPost({
+                type: 'review',
+                courseId: currentCourse.id,
+                userId: user.id,
+                content
+            });
+            
+            // 질문권 지급
+            updateUser(user.id, { secretQuestions: user.secretQuestions + 1 });
+            
+            alert('후기가 등록되었습니다!\n시크릿 질문권 1회가 지급되었습니다.');
+            location.reload();
+        }
+
+        function formatDate(timestamp) {
+            return new Date(timestamp).toLocaleDateString('ko-KR');
+        }
+    </script>
+</body>
+  </html>

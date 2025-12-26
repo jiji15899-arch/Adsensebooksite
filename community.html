@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티 - GA100</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .community-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .community-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .community-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        .community-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .community-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .tab-panel {
+            display: none;
+        }
+        
+        .tab-panel.active {
+            display: block;
+        }
+        
+        .post-actions {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .post-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        
+        .post-list {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .post-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .post-item:hover {
+            background: var(--light);
+        }
+        
+        .post-item:last-child {
+            border-bottom: none;
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .post-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        .post-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .post-content-preview {
+            color: var(--text);
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .post-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .notice-badge {
+            background: var(--danger);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .secret-badge {
+            background: var(--warning);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .post-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .post-detail-content {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+        }
+        
+        .post-detail-header {
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .post-detail-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .post-detail-body {
+            line-height: 1.8;
+            color: var(--text);
+            padding: 20px 0;
+            min-height: 200px;
+        }
+        
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border);
+        }
+        
+        .comment-form {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .comment-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        .comment-text {
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .comment-date {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--light);
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">GA<span>100</span></a>
+                </div>
+                <nav class="nav">
+                    <a href="courses.html">전자책</a>
+                    <a href="revenue.html">수익인증</a>
+                    <a href="community.html">커뮤니티</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="notification-btn" id="notificationBtn">🔔</button>
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>GA100</h3>
+            <button class="close-sidebar" id="closeSidebar">✕</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <button class="auth-btn" id="authBtn">로그인</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="community-hero">
+        <div class="container">
+            <h1>💬 커뮤니티</h1>
+            <p>함께 소통하고 성장하는 공간</p>
+        </div>
+    </div>
+
+    <main class="community-container">
+        <div class="community-tabs">
+            <button class="community-tab active" onclick="switchCommunityTab('notice')">공지사항</button>
+            <button class="community-tab" onclick="switchCommunityTab('secret')">시크릿 1:1 질문</button>
+            <button class="community-tab" onclick="switchCommunityTab('knowhow')">제자 노하우</button>
+            <button class="community-tab" onclick="switchCommunityTab('free')">자유게시판</button>
+            <button class="community-tab" onclick="switchCommunityTab('qna')">질문/답변</button>
+        </div>
+
+        <!-- 공지사항 -->
+        <div class="tab-panel active" id="panel-notice">
+            <div class="post-actions" id="noticeActions" style="display: none;">
+                <span>관리자 전용</span>
+                <button class="btn btn-primary" onclick="showPostForm('notice')">공지 작성</button>
+            </div>
+            <div class="post-form" id="form-notice"></div>
+            <div class="post-list" id="list-notice"></div>
+        </div>
+
+        <!-- 시크릿 1:1 질문 -->
+        <div class="tab-panel" id="panel-secret">
+            <div class="post-actions">
+                <div>
+                    <span>보유 질문권: <strong id="questionTickets">0</strong>회</span>
+                </div>
+                <button class="btn btn-primary" onclick="showPostForm('secret')">질문하기</button>
+            </div>
+            <div class="post-form" id="form-secret"></div>
+            <div class="post-list" id="list-secret"></div>
+        </div>
+
+        <!-- 제자 노하우 -->
+        <div class="tab-panel" id="panel-knowhow">
+            <div class="post-actions">
+                <span>나만의 노하우를 공유해주세요</span>
+                <button class="btn btn-primary" onclick="showPostForm('knowhow')">노하우 공유</button>
+            </div>
+            <div class="post-form" id="form-knowhow"></div>
+            <div class="post-list" id="list-knowhow"></div>
+        </div>
+
+        <!-- 자유게시판 -->
+        <div class="tab-panel" id="panel-free">
+            <div class="post-actions">
+                <span>자유롭게 이야기를 나눠보세요</span>
+                <button class="btn btn-primary" onclick="showPostForm('free')">글쓰기</button>
+            </div>
+            <div class="post-form" id="form-free"></div>
+            <div class="post-list" id="list-free"></div>
+        </div>
+
+        <!-- 질문/답변 -->
+        <div class="tab-panel" id="panel-qna">
+            <div class="post-actions">
+                <span>모두가 답변할 수 있습니다</span>
+                <button class="btn btn-primary" onclick="showPostForm('qna')">질문하기</button>
+            </div>
+            <div class="post-form" id="form-qna"></div>
+            <div class="post-list" id="list-qna"></div>
+        </div>
+    </main>
+
+    <!-- 게시글 상세 모달 -->
+    <div class="post-detail-modal" id="postDetailModal">
+        <div class="post-detail-content">
+            <button class="modal-close" onclick="closePostDetail()">✕</button>
+            <div class="post-detail-header">
+                <div class="post-detail-title" id="modalTitle"></div>
+                <div class="post-meta" id="modalMeta"></div>
+            </div>
+            <div class="post-detail-body" id="modalBody"></div>
+            
+            <div class="comments-section">
+                <h3>댓글 <span id="commentCount">0</span></h3>
+                <div class="comment-form">
+                    <form onsubmit="handleCommentSubmit(event)">
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="댓글을 입력하세요..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">댓글 작성</button>
+                    </form>
+                </div>
+                <div id="commentsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="my-home.html">마이홈</a>
+                <a href="revenue.html">수익인증</a>
+                <a href="courses.html">전자책</a>
+                <a href="community.html">커뮤니티</a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2024 GA100. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let currentPostId = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initAuth();
+            checkAdminAccess();
+            loadPosts('notice');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            if (tab) switchCommunityTab(tab);
+            
+            updateQuestionTickets();
+        });
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.add('active');
+        });
+
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('active');
+        });
+
+        function checkAdminAccess() {
+            const user = getCurrentUser();
+            if (user && user.role === 'admin') {
+                document.getElementById('noticeActions').style.display = 'flex';
+            }
+        }
+
+        function updateQuestionTickets() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('questionTickets').textContent = user.secretQuestions;
+            }
+        }
+
+        function switchCommunityTab(tab) {
+            document.querySelectorAll('.community-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            const tabs = ['notice', 'secret', 'knowhow', 'free', 'qna'];
+            const index = tabs.indexOf(tab);
+            document.querySelectorAll('.community-tab')[index].classList.add('active');
+            document.getElementById('panel-' + tab).classList.add('active');
+            
+            loadPosts(tab);
+        }
+
+        function showPostForm(type) {
+            const user = getCurrentUser();
+            if (!user) {
+                alert('로그인이 필요합니다.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (type === 'notice' && user.role !== 'admin') {
+                alert('관리자만 작성할 수 있습니다.');
+                return;
+            }
+            
+            if (type === 'secret' && user.secretQuestions <= 0) {
+                alert('질문권이 부족합니다.');
+                return;
+            }
+            
+            const form = document.getElementById('form-' + type);
+            form.innerHTML = `
+                <h3>${type === 'notice' ? '공지사항' : type === 'secret' ? '시크릿 질문' : '게시글'} 작성</h3>
+                <form onsubmit="handlePostSubmit(event, '${type}')">
+                    <div class="form-group">
+                        <label>제목</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>내용</label>
+                        <textarea class="form-control" required style="min-height: 200px;"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary">등록</button>
+                        <button type="button" class="btn btn-outline" onclick="hidePostForm('${type}')">취소</button>
+                    </div>
+                </form>
+            `;
+            form.style.display = 'block';
+        }
+
+        function hidePostForm(type) {
+            document.getElementById('form-' + type).style.display = 'none';
+        }
+
+        function handlePostSubmit(event, type) {
+            event.preventDefault();
+            const user = getCurrentUser();
+            const title = event.target.querySelector('input').value;
+            const content = event.target.querySelector('textarea').value;
+            
+            const post = addCommunityPost({
+                type,
+                userId: user.id,
+                title,
+                content
+            });
+            
+            if (type === 'secret') {
+                updateUser(user.id, { secretQuestions: user.secretQuestions - 1 });
+                updateQuestionTickets();
+            } else if (type === 'knowhow' || type === 'free' || type === 'qna') {
+                updateUser(user.id, { secretQuestions: user.secretQuestions + 2 });
+                updateQuestionTickets();
+            }
+            
+            alert('게시글이 등록되었습니다!');
+            hidePostForm(type);
+            loadPosts(type);
+        }
+
+        function loadPosts(type) {
+            const posts = getCommunityPosts(type).sort((a, b) => b.created - a.created);
+            const container = document.getElementById('list-' + type);
+            const user = getCurrentUser();
+            
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: var(--text-light);">
+                        <div style="font-size: 64px; margin-bottom: 20px; opacity: 0.3;">📝</div>
+                        <h3>아직 작성된 게시글이 없습니다</h3>
+                        <p>첫 게시글을 작성해보세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = posts.map(post => {
+                const author = getUsers().find(u => u.id === post.userId);
+                const isSecret = type === 'secret';
+                const canView = !isSecret || post.userId === user?.id || user?.role === 'admin';
+                
+                return `
+                    <div class="post-item" onclick="openPost('${post.id}', ${canView})">
+                        <div class="post-header">
+                            <div>
+                                <div class="post-title">
+                                    ${type === 'notice' ? '<span class="notice-badge">공지</span> ' : ''}
+                                    ${isSecret ? '<span class="secret-badge">시크릿</span> ' : ''}
+                                    ${canView ? post.title : '🔒 비공개 질문'}
+                                </div>
+                                <div class="post-meta">
+                                    <span>${author?.nickname || '익명'}</span>
+                                    <span>${formatDate(post.created)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ${canView ? `
+                            <div class="post-content-preview">${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}</div>
+                        ` : ''}
+                        <div class="post-stats">
+                            <span>👁️ ${post.views || 0}</span>
+                            <span>💬 ${post.comments?.length || 0}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openPost(postId, canView) {
+            if (!canView) {
+                alert('본인의 질문만 확인할 수 있습니다.');
+                return;
+            }
+            
+            currentPostId = postId;
+            const posts = getCommunityPosts();
+            const post = posts.find(p => p.id === postId);
+            
+            if (!post) return;
+            
+            // 조회수 증가
+            post.views = (post.views || 0) + 1;
+            updatePost(postId, { views: post.views });
+            
+            const author = getUsers().find(u => u.id === post.userId);
+            
+            document.getElementById('modalTitle').textContent = post.title;
+            document.getElementById('modalMeta').innerHTML = `
+                <span>${author?.nickname || '익명'}</span>
+                <span>${formatDate(post.created)}</span>
+                <span>조회 ${post.views}</span>
+            `;
+            document.getElementById('modalBody').textContent = post.content;
+            document.getElementById('commentCount').textContent = post.comments?.length || 0;
+            
+            loadComments(post);
+            
+            document.getElementById('postDetailModal').style.display = 'block';
+        }
+
+        function closePostDetail() {
+            document.getElementById('postDetailModal').style.display = 'none';
+        }
+
+        function loadComments(post) {
+            const container = document.getElementById('commentsList');
+            const comments = post.comments || [];
+            
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">아직 댓글이 없습니다.</p>';
+                return;
+            }
+            
+            container.innerHTML = comments.map(comment => {
+                const author = getUsers().find(u => u.id === comment.userId);
+                return `
+                    <div class="comment-item">
+                        <div class="comment-author">${author?.nickname || '익명'}</div>
+                        <div class="comment-text">${comment.content}</div>
+                        <div class="comment-date">${formatDate(comment.created)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleCommentSubmit(event) {
+            event.preventDefault();
+            const user = getCurrentUser();
+            
+            if (!user) {
+                alert('로그인이 필요합니다.');
+                return;
+            }
+            
+            const content = event.target.querySelector('textarea').value;
+            
+            addComment(currentPostId, {
+                userId: user.id,
+                content
+            });
+            
+            alert('댓글이 작성되었습니다!\n질문권 1회가 지급되었습니다.');
+            event.target.reset();
+            
+            const posts = getCommunityPosts();
+            const post = posts.find(p => p.id === currentPostId);
+            loadComments(post);
+            document.getElementById('commentCount').textContent = post.comments.length;
+            
+            updateQuestionTickets();
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(hours / 24);
+            
+            if (hours < 1) return '방금 전';
+            if (hours < 24) return `${hours}시간 전`;
+            if (days < 7) return `${days}일 전`;
+            return date.toLocaleDateString('ko-KR');
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('postDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) closePostDetail();
+        });
+    </script>
+</body>
+          </html>
